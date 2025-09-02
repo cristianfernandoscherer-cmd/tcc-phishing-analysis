@@ -1,0 +1,382 @@
+{
+  "name": "Phishing - Simple classification GPT 4.1-mini",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -4740,
+        -880
+      ],
+      "id": "50135e5d-619e-4f21-9489-dce1a91dcdf8",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "filePath": "/data/input/simple_classification/simple_classification_1.csv"
+      },
+      "id": "cc9d143a-79f5-4cc3-a763-07744dd599f8",
+      "name": "Read CSV",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        -4540,
+        -880
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "fd7dc886-8630-4a09-8de8-526e24617bf5",
+      "name": "Parse CSV data",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        -4340,
+        -880
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function fixEncoding(str) {\n  try {\n    return Buffer.from(str || '', 'binary').toString('utf8');\n  } catch (err) {\n    return str;\n  }\n}\n\nconst rows = items.slice(1);\n\nreturn rows\n  .map((item, indice) => {\n    const row = item.json.row;\n    if (!row) return null;\n\n    return {\n      json: {\n        indice: indice,\n        sender: row[0] || null,\n        receiver: row[1] || null,\n        subject: row[3] || null,\n        body: fixEncoding(row[4] || ''),\n        urls: row[5] || null,\n        llm_generated: row[6],\n        is_phishing: row[7],\n      },\n    };\n  })\n  .filter(item => item !== null);"
+      },
+      "id": "1407e0a9-7157-4ee4-bee4-9f969e821a4a",
+      "name": "Format email data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -4140,
+        -880
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "fileName": "/data/output/simple_classification_p1_gpt-41_mini.csv",
+        "options": {
+          "append": true
+        }
+      },
+      "id": "940b5649-03e7-43b3-baad-62a0397f5ef3",
+      "name": "Write to CSV2",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        -1700,
+        -1040
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3700,
+        -880
+      ],
+      "id": "30b9ecb7-5637-4250-8dc9-26bad1b7ab30",
+      "name": "Loop over items2",
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "functionCode": "const item = $input.first().json;\nitem.start_time = Date.now();\nreturn item;"
+      },
+      "id": "c7aa2f9a-515b-421f-b48c-c42496ea9675",
+      "name": "Start timer2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -3400,
+        -880
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Classificar e-mails como 'phishing' ou 'not phishing' com base em critérios técnicos, comportamentais e contextuais. Responda estritamente com apenas uma das duas palavras anteriores, sem qualquer outro caractere, formatação ou pontuação.\n\nConsidere os seguintes critérios para classificação dos e-mails:\n**Análise de Domínio:** Verifique se o domínio foi registrado há menos de 6 meses, se há divergência em relação a domínios legítimos, a presença de termos suspeitos (como \"secure-login\", \"update-account\") e se o certificado SSL é inválido, autoassinado ou ausente. Avalie se o subdomínio apresenta estrutura suspeita (ex: login.paypal.secure-mail.ru), presença de codificação maliciosa (%00, %0D%0A), uso de portas não padrão (como :8080) ou ofuscação via IP em formato hexadecimal ou decimal.\n\n**Semântica e Engenharia Social:** Identifique elementos como apelos à urgência, medo, recompensas excessivas, dissonância cognitiva, autoridade falsa (ex: \"contato do suporte\") ou omissões intencionais de informações para induzir o clique.\n\n**Cabeçalhos e Metadados Técnicos:** Verifique falhas em SPF, DKIM ou DMARC, discrepância de fuso horário do servidor, múltiplos redirecionamentos e rastreamento invisível.\n\n**Anexos:** Avalie se o hash do anexo consta em listas de malware conhecidas, se há metadados incomuns (autores desconhecidos, timestamps incoerentes), presença de macros ou scripts embutidos e se o tipo de arquivo é incomum para o contexto (ex: .iso, .hta).\n\n**Contexto Externo:** Considere se o conteúdo se relaciona com eventos atuais ou campanhas sazonais, se utiliza táticas compatíveis com APTs ou campanhas conhecidas, ou se apresenta semelhança com amostras anteriores de phishing.\n\n**Comportamento Anômalo:** Observe padrões incomuns de horário de envio ou comportamento atípico do remetente.\n\n**Técnicas Avançadas:** Investigue a presença de esteganografia em imagens, redirecionamentos múltiplos ou disfarçados, ausência de certificado EV e variações de domínio via typosquatting ou combosquatting.\n\n**Análise de HTML Simplificado:** Verifique estrutura HTML minimalista com menos de 20 tags principais e ausência de elementos padrão.\n\n**Impersonificação de Marcas:** Identifique cópias de logos, cores ou nomes de marcas com pequenas variações.\n\n**Serviços de Hospedagem Gratuita:** Analise links para Dropbox, Google Drive ou domínios de hospedagem gratuita em contextos incomuns.\n\nCritério de Classificação  \n**phishing:**\nCritério crítico: Qualquer evidência de fraude técnica (ex: URL maliciosa, anexo com malware).\nIndícios secundários: 2+ sinais comportamentais (urgência + erro gramatical + domínio suspeito).\n**not phishing:**\nSem critérios críticos e <=1 indício secundário.\n\nInstruções adicionais ao modelo:  \n-Priorize a redução de falsos negativos.  \n-Se 'urls' for igual a 1, analise todos os links do corpo do e-mail. Caso contrário, analise somente as URLs fornecidos explicitamente.  \n-Desconsidere dados vazios como sender, receiver, subject, body e urls.\n\nDados de entrada para análise:\n**sender**: {{ JSON.stringify($json.sender) }}  \n**receiver**: {{ JSON.stringify($json.receiver) }}  \n**subject**: {{ JSON.stringify($json.subject) }}  \n**urls no email**: {{ JSON.stringify($json.urls) }}\n**body**: {{ JSON.stringify($json.body) }}  ",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -3000,
+        -820
+      ],
+      "id": "05d737c0-7cb1-41c2-afc3-c2d310cc2cc0",
+      "name": "Classify with LLM2",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "functionCode": "return {\n  end_time: Date.now(),\n  text: $input.first().json.text\n}"
+      },
+      "id": "3e93c178-f18b-4d37-8094-b82567b640be",
+      "name": "End timer2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -2620,
+        -900
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex"
+      },
+      "id": "2b2a5c47-13c4-4b5c-8eb7-cab182496942",
+      "name": "Merge data2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        -2420,
+        -1040
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return items.map(item => ({\n  json: {\n    indice: item.json.indice || 0,\n    sender: item.json.sender || '',\n    receiver: item.json.receiver || '',\n    subject: item.json.subject || '',\n    body: item.json.body || '',\n    urls: item.json.urls || '',\n    llm_generated: item.json.llm_generated || 0,\n    is_phishing: item.json.is_phishing || 0,\n    llm_classification: \n      item.json.text === \"phishing\" ? 1 : \n      item.json.text === \"not phishing\" ? 0 : \"error\",\n    classification_date: new Date().toISOString(),\n    start_time: item.json.start_time,\n    end_time: item.json.end_time\n  }\n}));"
+      },
+      "id": "aafd2646-8bbf-4c5d-b408-dbd4d471fa91",
+      "name": "Format output2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -2080,
+        -1040
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Função independente para formatar URLs\nconst formatUrls = (urls) => {\n  if (urls === null || urls === undefined) return '\"\"';\n  if (typeof urls === 'string') return `\"${urls.replace(/\"/g, '\"\"')}\"`;\n  if (Array.isArray(urls)) {\n    return `\"${urls\n      .map(url => url === null ? '' : String(url).replace(/\"/g, '\"\"'))\n      .filter(url => url)\n      .join('; ')}\"`;\n  }\n  return `\"${String(urls).replace(/\"/g, '\"\"')}\"`;\n};\n\n// Cabeçalho atualizado\nconst headers = [\n  'indice',\n  'sender',\n  'receiver', \n  'subject',\n  'body',\n  'urls',\n  'llm_generated',\n  'is_phishing',\n  'llm_classification',\n  'classification_date',\n  'start_time',\n  'end_time',\n  'processing_time_seconds' \n];\n\n// Dados formatados com cálculo do tempo\nlet values = items.map(item => {\n  // Calcula o tempo de processamento em segundos com 3 casas decimais\n  const processingTime = item.json.end_time && item.json.start_time\n    ? ((item.json.end_time - item.json.start_time) / 1000).toFixed(3)\n    : '';\n    \n  return [\n    item.json.indice,\n    `\"${(item.json.sender || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(item.json.receiver || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(item.json.subject || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(item.json.body || '').replace(/\"/g, '\"\"')}\"`,\n    formatUrls(item.json.urls),\n    item.json.llm_generated,\n    item.json.is_phishing,\n    item.json.llm_classification,\n    item.json.classification_date,\n    item.json.start_time,\n    item.json.end_time,\n    processingTime  // Adiciona o tempo calculado\n  ];\n});\n\n// Adiciona cabeçalho apenas se algum item tiver indice === 0\nif (items.some(item => item.json.indice === 0)) {\n  values = [headers, ...values];\n}\n\n// Gera CSV\nconst csvContent = values.map(row => row.join(',')).join('\\n') + '\\n';\n\nreturn [{\n  json: {},\n  binary: {\n    data: {\n      data: Buffer.from(csvContent).toString('base64'),\n      mimeType: 'text/csv'\n    }\n  }\n}];"
+      },
+      "name": "Create CSV binary2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1880,
+        -1040
+      ],
+      "id": "ad5ea5d7-34ed-42ff-bfa0-2c08b3aaad95"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2060,
+        -620
+      ],
+      "id": "738d56c2-1ec5-417d-8566-108ff06cb249",
+      "name": "Wai2",
+      "webhookId": "a2fd268d-c263-4ff1-b498-2916187fc779"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2980,
+        -600
+      ],
+      "id": "49893440-89ca-48a5-96c7-0097534e7f93",
+      "name": "OpenAI LLM2",
+      "credentials": {
+        "openAiApi": {
+          "id": "50m9urbxF5bDrMdx",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Read CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read CSV": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CSV data": {
+      "main": [
+        [
+          {
+            "node": "Format email data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format email data": {
+      "main": [
+        [
+          {
+            "node": "Loop over items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop over items2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Start timer2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start timer2": {
+      "main": [
+        [
+          {
+            "node": "Classify with LLM2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge data2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify with LLM2": {
+      "main": [
+        [
+          {
+            "node": "End timer2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End timer2": {
+      "main": [
+        [
+          {
+            "node": "Merge data2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge data2": {
+      "main": [
+        [
+          {
+            "node": "Format output2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wai2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format output2": {
+      "main": [
+        [
+          {
+            "node": "Create CSV binary2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create CSV binary2": {
+      "main": [
+        [
+          {
+            "node": "Write to CSV2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wai2": {
+      "main": [
+        [
+          {
+            "node": "Loop over items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI LLM2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classify with LLM2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "19916abe-a83d-479a-bb7c-590bc4625055",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "42c406e8d82dbfe6b2b106b5a7a270503d19a19f6ae90f29f444e555385f7418"
+  },
+  "id": "3ydaJkqny6LxZyFb",
+  "tags": []
+}
