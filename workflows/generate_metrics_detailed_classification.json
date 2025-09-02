@@ -1,0 +1,129 @@
+{
+  "name": "Phishing - Metrics detail classification",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -100
+      ],
+      "id": "a4f6de41-3f6b-4fee-9bbb-f3ad5d3d749c",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Initialize counters\nlet total_items = 0;\nlet total_processing_time = 0;\n\n// Initialize confusion matrix for each category (all lowercase)\nconst categories = [\"phishing\", \"fraud\", \"commercial spam\", \"false positives\"];\nconst metrics = {};\n\ncategories.forEach(category => {\n  metrics[category] = {\n    true_positives: 0,\n    false_positives: 0,\n    true_negatives: 0,\n    false_negatives: 0\n  };\n});\n\n// Process each item\nfor (const item of items) {\n  if (!item.json) continue;\n\n  const classification = item.json.classification;\n  const llm_classification = item.json.llm_classification;\n\n  // Skip if any classification is missing or not a string\n  if (typeof classification !== 'string' || !classification.trim()) continue;\n  if (typeof llm_classification !== 'string' || !llm_classification.trim()) continue;\n\n  const correct = classification.toLowerCase().trim();\n  const predicted = llm_classification.toLowerCase().trim();\n  const processingTime = parseFloat(item.json.processing_time_seconds) || 0;\n\n  // Skip if classification not in defined categories\n  if (!categories.includes(correct) || !categories.includes(predicted)) continue;\n\n  total_items++;\n  total_processing_time += processingTime;\n\n  // Update confusion matrix for each category\n  categories.forEach(category => {\n    if (correct === category && predicted === category) {\n      metrics[category].true_positives++;\n    } else if (predicted === category && correct !== category) {\n      metrics[category].false_positives++;\n    } else if (correct === category && predicted !== category) {\n      metrics[category].false_negatives++;\n    } else {\n      metrics[category].true_negatives++;\n    }\n  });\n}\n\n// Calculate precision, recall and F1-score for each category\ncategories.forEach(category => {\n  const tp = metrics[category].true_positives;\n  const fp = metrics[category].false_positives;\n  const fn = metrics[category].false_negatives;\n\n  const precision = (tp + fp) > 0 ? tp / (tp + fp) : 0;\n  const recall = (tp + fn) > 0 ? tp / (tp + fn) : 0;\n  const f1 = (precision + recall) > 0 ? 2 * (precision * recall) / (precision + recall) : 0;\n\n  metrics[category].precision = precision;\n  metrics[category].recall = recall;\n  metrics[category].f1_score = f1;\n});\n\n// Calculate average processing time\nconst avg_processing_time = total_items > 0 ? total_processing_time / total_items : 0;\n\n// Prepare the final result\nconst result = {\n  total_items,\n  avg_processing_time,\n  metrics\n};\n\n// Format numbers to 4 decimal places\nfunction formatNumbers(obj) {\n  for (const key in obj) {\n    if (typeof obj[key] === 'object' && obj[key] !== null) {\n      formatNumbers(obj[key]);\n    } else if (typeof obj[key] === 'number') {\n      obj[key] = parseFloat(obj[key].toFixed(4));\n    }\n  }\n}\n\nformatNumbers(result);\n\nreturn [{\n  json: result\n}];\n"
+      },
+      "id": "e171bbb3-511b-437f-90a1-8ad1fdb0d309",
+      "name": "Calculate Metrics",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -100
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "a772062e-01e9-4123-b54f-1e53b061d9ec",
+      "name": "Parse Spreadsheet",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function fixEncoding(str) {\n  try {\n    return Buffer.from(str || '', 'binary').toString('utf8');\n  } catch (err) {\n    return str;\n  }\n}\n\nconst rows = items.slice(1);\n\nreturn rows\n  .map((item, indice) => {\n    const row = item.json.row;\n    if (!row) return null;\n\n    return {\n      json: {\n        indice: row[0],\n        subject: row[1] || null,\n        body: fixEncoding(row[2] || ''),\n        classification: row[3],\n        llm_classification: row[4],\n        processing_time_seconds: row[8]\n      },\n    };\n  })\n  .filter(item => item !== null);"
+      },
+      "id": "530e8bd9-4d94-4c2d-9015-68c51e02978f",
+      "name": "Extract Emails from Rows",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -100
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "filePath": "/data/results_final/detailed_classification/result_analyze_detailed_llama3-8b-8192.csv"
+      },
+      "id": "bb3758df-0a22-40ef-aa0e-192705c8b173",
+      "name": "Read Data1",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        360,
+        -100
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Read Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Extract Emails from Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Emails from Rows": {
+      "main": [
+        [
+          {
+            "node": "Calculate Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Data1": {
+      "main": [
+        [
+          {
+            "node": "Parse Spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d4a8e682-28cb-43de-97bf-a59f4ba5687f",
+  "meta": {
+    "instanceId": "42c406e8d82dbfe6b2b106b5a7a270503d19a19f6ae90f29f444e555385f7418"
+  },
+  "id": "WrgWI49FSjwzmvcP",
+  "tags": []
+}
