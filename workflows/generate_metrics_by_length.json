@@ -1,0 +1,621 @@
+{
+  "name": "Phishing - Metrics simple classification by mail lenght",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "26165ccb-b17a-46af-9ab5-32ad822edd9d",
+      "name": "Parse Spreadsheet",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function fixEncoding(str) {\n  try {\n    return Buffer.from(str || '', 'binary').toString('utf8');\n  } catch (err) {\n    return str;\n  }\n}\n\nconst rows = items.slice(1);\n\nreturn rows\n  .map((item, indice) => {\n    const row = item.json.row;\n    if (!row) return null;\n\n    return {\n      json: {\n        indice: row[0],\n        sender: row[1] || null,\n        receiver: row[2] || null,\n        subject: row[3] || null,\n        body: fixEncoding(row[4] || ''),\n        urls: row[5] || null,\n        llm_generated: row[6],\n        is_phishing: row[7],\n        llm_classification: row[8],\n        classification_date: row[9],\n        processing_time_seconds: row[12]\n      },\n    };\n  })\n  .filter(item => item !== null);"
+      },
+      "id": "475d8f51-ffe5-4c23-976d-56941978a5bc",
+      "name": "Extract Emails from Rows",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -100
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "filePath": "/data/result_analyze.csv"
+      },
+      "id": "9e0d5a93-d2c9-4c51-817f-818b70b22f78",
+      "name": "Read Data1",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        360,
+        -100
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        180,
+        440
+      ],
+      "id": "0015953f-b210-49a2-bf18-a16469d24364",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "filePath": "/data/results_final/simple_classification/simple_classification_p2_gemma2.csv"
+      },
+      "id": "a6eda11b-cccc-4ac3-aa67-65d0ea2c5563",
+      "name": "Read CSV 2",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        600,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "/data/results_final/simple_classification/simple_classification_p1_gemma2.csv"
+      },
+      "id": "66206fba-910c-45bf-94eb-fc4a4303cb77",
+      "name": "Read CSV 1",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        600,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "/data/results_final/simple_classification/simple_classification_p3_gemma2.csv"
+      },
+      "id": "a48632e5-e007-47ab-af30-6bc50149fb83",
+      "name": "Read CSV 3",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        600,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "/data/results_final/simple_classification/simple_classification_p4_gemma2.csv"
+      },
+      "id": "a3ac93cf-2125-431e-99b5-31bba38e6dfb",
+      "name": "Read CSV 4",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        600,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "/data/results_final/simple_classification/simple_classification_p5_gemma2.csv"
+      },
+      "id": "7aa495e6-0b5b-4e86-a305-552532a626c0",
+      "name": "Read CSV 5",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        600,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "5e0ed62e-d69d-4e29-a4a0-098baa483c6c",
+      "name": "Parse CSV 1",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        800,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "7e480bd8-6d12-4667-8d67-ac68969b19a6",
+      "name": "Parse CSV 2",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        800,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "7b5d953f-158f-4b2b-aac9-44982c31409f",
+      "name": "Parse CSV 3",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        800,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "5df8e38c-66b6-4068-858c-23578a22cc76",
+      "name": "Parse CSV 4",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        800,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "edb4412c-fa34-4f20-b875-75122c692ed9",
+      "name": "Parse CSV 5",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        800,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function fixEncoding(str) {\n  try {\n    return Buffer.from(str || '', 'binary').toString('utf8');\n  } catch (err) {\n    return str;\n  }\n}\n\nconst rows = items.slice(1);\n\nreturn rows\n  .map((item) => {\n    const row = item.json.row;\n    if (!Array.isArray(row)) return null;\n\n    return {\n      json: {\n        indice: row[0],\n        sender: row[1] || null,\n        receiver: row[2] || null,\n        subject: row[3] || null,\n        body: fixEncoding(row[4] || ''),\n        urls: row[5] || null,\n        llm_generated: row[6],\n        is_phishing: row[7],\n        llm_classification: row[8],\n        classification_date: row[9],\n        processing_time_seconds: row[12]\n      },\n    };\n  })\n  .filter((item) => item !== null);\nreturn items;"
+      },
+      "id": "4131a7f2-01a6-446a-941f-cc8751cf0e7c",
+      "name": "Extract Rows 2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function fixEncoding(str) {\n  try {\n    return Buffer.from(str || '', 'binary').toString('utf8');\n  } catch (err) {\n    return str;\n  }\n}\n\nconst rows = items.slice(1);\n\nreturn rows\n  .map((item) => {\n    const row = item.json.row;\n    if (!Array.isArray(row)) return null;\n\n    return {\n      json: {\n       indice: row[0],\n        sender: row[1] || null,\n        receiver: row[2] || null,\n        subject: row[3] || null,\n        body: fixEncoding(row[4] || ''),\n        urls: row[5] || null,\n        llm_generated: row[6],\n        is_phishing: row[7],\n        llm_classification: row[8],\n        classification_date: row[9],\n        processing_time_seconds: row[12]\n      },\n    };\n  })\n  .filter((item) => item !== null);\n"
+      },
+      "id": "1f17da54-4a53-4bcc-83a0-c694dba71868",
+      "name": "Extract Rows 1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function fixEncoding(str) {\n  try {\n    return Buffer.from(str || '', 'binary').toString('utf8');\n  } catch (err) {\n    return str;\n  }\n}\n\nconst rows = items.slice(1);\n\nreturn rows\n  .map((item) => {\n    const row = item.json.row;\n    if (!Array.isArray(row)) return null;\n\n    return {\n      json: {\n        indice: row[0],\n        sender: row[1] || null,\n        receiver: row[2] || null,\n        subject: row[3] || null,\n        body: fixEncoding(row[4] || ''),\n        urls: row[5] || null,\n        llm_generated: row[6],\n        is_phishing: row[7],\n        llm_classification: row[8],\n        classification_date: row[9],\n        processing_time_seconds: row[12]\n      },\n    };\n  })\n  .filter((item) => item !== null);\nreturn items;"
+      },
+      "id": "66906108-510c-457d-9692-d2dda8a43c18",
+      "name": "Extract Rows 3",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function fixEncoding(str) {\n  try {\n    return Buffer.from(str || '', 'binary').toString('utf8');\n  } catch (err) {\n    return str;\n  }\n}\n\nconst rows = items.slice(1);\n\nreturn rows\n  .map((item) => {\n    const row = item.json.row;\n    if (!Array.isArray(row)) return null;\n\n    return {\n      json: {\n        indice: row[0],\n        sender: row[1] || null,\n        receiver: row[2] || null,\n        subject: row[3] || null,\n        body: fixEncoding(row[4] || ''),\n        urls: row[5] || null,\n        llm_generated: row[6],\n        is_phishing: row[7],\n        llm_classification: row[8],\n        classification_date: row[9],\n        processing_time_seconds: row[12]\n      },\n    };\n  })\n  .filter((item) => item !== null);\nreturn items;"
+      },
+      "id": "fd384e19-cf75-44e9-b8eb-26c54184c569",
+      "name": "Extract Rows 4",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function fixEncoding(str) {\n  try {\n    return Buffer.from(str || '', 'binary').toString('utf8');\n  } catch (err) {\n    return str;\n  }\n}\n\nconst rows = items.slice(1);\n\nreturn rows\n  .map((item) => {\n    const row = item.json.row;\n    if (!Array.isArray(row)) return null;\n\n    return {\n      json: {\n        indice: row[0],\n        sender: row[1] || null,\n        receiver: row[2] || null,\n        subject: row[3] || null,\n        body: fixEncoding(row[4] || ''),\n        urls: row[5] || null,\n        llm_generated: row[6],\n        is_phishing: row[7],\n        llm_classification: row[8],\n        classification_date: row[9],\n        processing_time_seconds: row[12]\n      },\n    };\n  })\n  .filter((item) => item !== null);\nreturn items;"
+      },
+      "id": "23b2406e-8d7a-4185-acf3-789a76b045c9",
+      "name": "Extract Rows 5",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        740
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5a2c5b40-b824-4e0e-9c2f-e119b630abda",
+      "name": "Merge 1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        260
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "1c560cfc-323e-46da-93c8-6c9f64882cc8",
+      "name": "Merge 2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        520
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d5b9e93f-0606-4e37-bf29-a034a86b8030",
+      "name": "Merge 3",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        400
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "e5cd50c8-faa8-4dac-9ea6-e28a81644ce1",
+      "name": "Merge 4",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Initialize counters for confusion matrix\nlet truePositives = 0;\nlet falsePositives = 0;\nlet trueNegatives = 0;\nlet falseNegatives = 0;\n\n// Variáveis para cálculo de tempo\nlet totalProcessingTime = 0;\nlet validItemsCount = 0;\n\n// Process each item to calculate metrics\nitems.forEach(item => {\n  const actual = item.json.is_phishing;\n  const predicted = item.json.llm_classification;\n\n  // Convert to boolean if needed\n  const actualBool = String(actual).toLowerCase() === 'true' || actual === 1 || actual === '1';\n  const predictedBool = String(predicted).toLowerCase() === 'true' || predicted === 1 || predicted === '1';\n\n  if (actualBool && predictedBool) truePositives++;\n  else if (!actualBool && predictedBool) falsePositives++;\n  else if (!actualBool && !predictedBool) trueNegatives++;\n  else if (actualBool && !predictedBool) falseNegatives++;\n\n  // Cálculo baseado em processing_time_seconds já existente\n  const processingTime = item.json.processing_time_seconds;\n  if (typeof processingTime === 'number' && !isNaN(processingTime)) {\n    totalProcessingTime += processingTime;\n    validItemsCount++;\n  }\n});\n\n// Calculate metrics\nconst precision = truePositives / (truePositives + falsePositives);\nconst recall = truePositives / (truePositives + falseNegatives);\nconst f1Score = 2 * (precision * recall) / (precision + recall);\n\n// Tempo médio com 2 casas decimais\nconst avgProcessingTimeSec = validItemsCount > 0\n  ? Number((totalProcessingTime / validItemsCount).toFixed(2))\n  : 0;\n\n// Return the metrics\nreturn [{\n  json: {\n    total_items: items.length,\n    true_positives: truePositives,\n    false_positives: falsePositives,\n    true_negatives: trueNegatives,\n    false_negatives: falseNegatives,\n    precision: precision,\n    recall: recall,\n    f1_score: f1Score,\n    avg_processing_time: avgProcessingTimeSec\n  }\n}];"
+      },
+      "id": "120e6fc8-5f34-43e2-9e56-6fb19ef8e21f",
+      "name": "Calculate Metrics3",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -100
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "functionCode": "// Initialize counters for confusion matrix for short and long emails\nlet shortEmailMetrics = {\n  truePositives: 0,\n  falsePositives: 0,\n  trueNegatives: 0,\n  falseNegatives: 0,\n  totalItems: 0,\n  totalProcessingTime: 0\n};\n\nlet longEmailMetrics = {\n  truePositives: 0,\n  falsePositives: 0,\n  trueNegatives: 0,\n  falseNegatives: 0,\n  totalItems: 0,\n  totalProcessingTime: 0\n};\n\n// Threshold to distinguish short vs long emails (adjust as needed)\nconst LENGTH_THRESHOLD = 800; // characters\n\n// Process each item to calculate metrics by email length\nitems.forEach(item => {\n  const actual = item.json.is_phishing;\n  const predicted = item.json.llm_classification;\n  const body = item.json.body || '';\n  const processingTime = item.json.processing_time_seconds;\n\n  // Convert to boolean if needed\n  const actualBool = String(actual).toLowerCase() === 'true' || actual === 1 || actual === '1';\n  const predictedBool = String(predicted).toLowerCase() === 'true' || predicted === 1 || predicted === '1';\n\n  // Determine if email is short or long\n  const isShortEmail = body.length <= LENGTH_THRESHOLD;\n  const metrics = isShortEmail ? shortEmailMetrics : longEmailMetrics;\n\n  // Update confusion matrix\n  if (actualBool && predictedBool) metrics.truePositives++;\n  else if (!actualBool && predictedBool) metrics.falsePositives++;\n  else if (!actualBool && !predictedBool) metrics.trueNegatives++;\n  else if (actualBool && !predictedBool) metrics.falseNegatives++;\n\n  metrics.totalItems++;\n\n  // Add processing time if valid\n  if (typeof processingTime === 'number' && !isNaN(processingTime)) {\n    metrics.totalProcessingTime += processingTime;\n  }\n});\n\n// Function to calculate metrics for a given set\nfunction calculateMetrics(metrics) {\n  const precision = metrics.truePositives + metrics.falsePositives > 0 \n    ? metrics.truePositives / (metrics.truePositives + metrics.falsePositives)\n    : 0;\n  \n  const recall = metrics.truePositives + metrics.falseNegatives > 0\n    ? metrics.truePositives / (metrics.truePositives + metrics.falseNegatives)\n    : 0;\n  \n  const f1Score = precision + recall > 0\n    ? 2 * (precision * recall) / (precision + recall)\n    : 0;\n\n  const avgProcessingTime = metrics.totalItems > 0\n    ? Number((metrics.totalProcessingTime / metrics.totalItems).toFixed(2))\n    : 0;\n\n  return {\n    precision,\n    recall,\n    f1Score,\n    avgProcessingTime\n  };\n}\n\n// Calculate metrics for both categories\nconst shortMetrics = calculateMetrics(shortEmailMetrics);\nconst longMetrics = calculateMetrics(longEmailMetrics);\n\n// Return the metrics for both categories\nreturn [{\n  json: {\n    length_threshold: LENGTH_THRESHOLD,\n    \n    short_emails: {\n      total_items: shortEmailMetrics.totalItems,\n      true_positives: shortEmailMetrics.truePositives,\n      false_positives: shortEmailMetrics.falsePositives,\n      true_negatives: shortEmailMetrics.trueNegatives,\n      false_negatives: shortEmailMetrics.falseNegatives,\n      precision: shortMetrics.precision,\n      recall: shortMetrics.recall,\n      f1_score: shortMetrics.f1Score,\n      avg_processing_time: shortMetrics.avgProcessingTime\n    },\n    \n    long_emails: {\n      total_items: longEmailMetrics.totalItems,\n      true_positives: longEmailMetrics.truePositives,\n      false_positives: longEmailMetrics.falsePositives,\n      true_negatives: longEmailMetrics.trueNegatives,\n      false_negatives: longEmailMetrics.falseNegatives,\n      precision: longMetrics.precision,\n      recall: longMetrics.recall,\n      f1_score: longMetrics.f1Score,\n      avg_processing_time: longMetrics.avgProcessingTime\n    },\n    \n    overall: {\n      total_items: shortEmailMetrics.totalItems + longEmailMetrics.totalItems,\n      true_positives: shortEmailMetrics.truePositives + longEmailMetrics.truePositives,\n      false_positives: shortEmailMetrics.falsePositives + longEmailMetrics.falsePositives,\n      true_negatives: shortEmailMetrics.trueNegatives + longEmailMetrics.trueNegatives,\n      false_negatives: shortEmailMetrics.falseNegatives + longEmailMetrics.falseNegatives\n    }\n  }\n}];"
+      },
+      "id": "657e2491-10de-4c5e-b2c1-6fc22ec7e886",
+      "name": "Calculate Metrics",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        540
+      ],
+      "alwaysOutputData": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Parse Spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Extract Emails from Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Emails from Rows": {
+      "main": [
+        [
+          {
+            "node": "Calculate Metrics3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Data1": {
+      "main": [
+        [
+          {
+            "node": "Parse Spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Read CSV 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read CSV 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read CSV 3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read CSV 4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read CSV 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read CSV 2": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read CSV 1": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read CSV 3": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read CSV 4": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read CSV 5": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CSV 1": {
+      "main": [
+        [
+          {
+            "node": "Extract Rows 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CSV 2": {
+      "main": [
+        [
+          {
+            "node": "Extract Rows 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CSV 3": {
+      "main": [
+        [
+          {
+            "node": "Extract Rows 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CSV 4": {
+      "main": [
+        [
+          {
+            "node": "Extract Rows 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CSV 5": {
+      "main": [
+        [
+          {
+            "node": "Extract Rows 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Rows 2": {
+      "main": [
+        [
+          {
+            "node": "Merge 1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Extract Rows 1": {
+      "main": [
+        [
+          {
+            "node": "Merge 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Rows 3": {
+      "main": [
+        [
+          {
+            "node": "Merge 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Rows 4": {
+      "main": [
+        [
+          {
+            "node": "Merge 2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Extract Rows 5": {
+      "main": [
+        [
+          {
+            "node": "Merge 4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge 1": {
+      "main": [
+        [
+          {
+            "node": "Merge 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge 2": {
+      "main": [
+        [
+          {
+            "node": "Merge 3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge 3": {
+      "main": [
+        [
+          {
+            "node": "Merge 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge 4": {
+      "main": [
+        [
+          {
+            "node": "Calculate Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "35819069-86ab-4c3d-96df-e458532ded69",
+  "meta": {
+    "instanceId": "42c406e8d82dbfe6b2b106b5a7a270503d19a19f6ae90f29f444e555385f7418"
+  },
+  "id": "2CGsQb5bSu8lYoHt",
+  "tags": []
+}
