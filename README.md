@@ -40,6 +40,7 @@ Run the following command:
 
 ```bash
 docker compose up -d
+```
 
 ### 4. Import Workflows
 
