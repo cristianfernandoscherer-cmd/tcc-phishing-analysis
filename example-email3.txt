@@ -1,0 +1,408 @@
+sender: ohwwlejs-pbfotbp@list.scms.waikato.ac.nz
+receiver: iuxxdkqk@list.scms.waikato.ac.nz
+subject: Wekalist Digest, Vol 60, Issue 11
+Body:
+Send Wekalist mailing list submissions to
+iuxxdkqk@list.scms.waikato.ac.nz
+
+To subscribe or unsubscribe via the World Wide Web, visit
+https://list.scms.waikato.ac.nz/mailman/listinfo/wekalist
+or, via email, send a message with subject or body 'help' to
+ohwwlejs-pbfotbp@list.scms.waikato.ac.nz
+
+You can reach the person managing the list at
+pobypuhs-hvhzj@list.scms.waikato.ac.nz
+
+When replying, please edit your Subject line so it is more specific
+than "Re: Contents of Wekalist digest..."
+
+
+Today's Topics:
+
+1. Multilayerperceptron results (David Poelz)
+2. Re: Wekalist Digest, Vol 60, Issue 10 (Rough Jade)
+
+
+----------------------------------------------------------------------
+
+>From xlicq@jmellow.org Sun Feb 24 10:27:37 2008
+Message: 1
+Date: Fri, 08 Feb 2008 05:39:44 +0100
+From: David Poelz 
+Subject: [Wekalist] Multilayerperceptron results
+To: "Weka machine learning workbench list."
+
+Message-ID: <1202445584.28437.4.camel@poelzd-desktop>
+Content-Type: text/plain
+
+Hi 
+
+I am trying to classify a data set with 3 classes with the
+Multilayerperceptron algorithm using the Weka data mining programm. I am
+testing various parameter settings to see which one yields the best
+results. I am experimenting with various learning rates, momentums and
+delay on/off. So far most of the parameter combinations yielded good
+results of around 85% correctly classified instances.
+
+But every once in a while I find a combination of parameters where the
+classification doesnt work at all and one (sometimes even two) class(es)
+seems to be left out of the process and the confusion matrix looks like
+the following:
+
+a b c <-- classified as
+0 6838 4 | a = '(-inf-0.25]'
+0 6728 72 | b = '(0.25-0.75]'
+0 2141 4952 | c = '(0.75-inf)'
+
+I have not found a pattern in the parameters that causes this. 
+
+What can be the reason for such behaviour?
+
+David
+
+
+
+
+------------------------------
+
+>From futqlhzpaj@gmail.com Sun Feb 24 10:27:37 2008
+Message: 2
+Date: Fri, 8 Feb 2008 13:20:04 +0800
+From: "Rough Jade" 
+Subject: [Wekalist] Re: Wekalist Digest, Vol 60, Issue 10
+To: iuxxdkqk@list.scms.waikato.ac.nz
+Message-ID:
+<62a4gi8s0658277462a48682065w2d74i2848i82065w@mail.gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+
+I've installed J2se Runtime environment 5 update14 in my computer, and set
+the environment variable listed below
+user variables
+Variable name- PATH
+Variable value- c:\\program files\\weka-3-5
+However the same error persists.
+
+RJ
+
+
+On Feb 8, 2008 11:44 AM, wrote:
+
+> Send Wekalist mailing list submissions to
+> iuxxdkqk@list.scms.waikato.ac.nz
+>
+> To subscribe or unsubscribe via the World Wide Web, visit
+> https://list.scms.waikato.ac.nz/mailman/listinfo/wekalist
+> or, via email, send a message with subject or body 'help' to
+> ohwwlejs-pbfotbp@list.scms.waikato.ac.nz
+>
+> You can reach the person managing the list at
+> pobypuhs-hvhzj@list.scms.waikato.ac.nz
+>
+> When replying, please edit your Subject line so it is more specific
+> than "Re: Contents of Wekalist digest..."
+>
+>
+> Today's Topics:
+>
+> 1. RE: Weka 3.5.7.exe installation problems (Danilovich, Yann)
+> 2. Question (bug?) (Uday Kamath)
+> 3. Event Sequence Mining (Budziak, G.)
+> 4. RE: Question (bug?) (Cristina Torres)
+> 5. RE: where can i find algorithms explanation
+> (Nanda, Subrat (GE, Research))
+>
+>
+> ----------------------------------------------------------------------
+>
+> Message: 1
+> Date: Thu, 7 Feb 2008 15:15:31 -0500
+> From: "Danilovich, Yann" 
+> Subject: RE: [Wekalist] Weka 3.5.7.exe installation problems
+> To: "Weka machine learning workbench list."
+> 
+> Message-ID:
+> <280hq5l0ghj79063e80h259kg197r06d28u72590@US-BE3.corp.mpi.com>
+> Content-Type: text/plain; charset="iso-8859-1"
+>
+> Weka 3.5.7 does not work with with jre6. You need jre5.
+>
+>
+>
+> 1) Make sure that your environment path variable points to your
+> [installation directory]\\jre\\bin;
+>
+> 2) Path to jre5 must be listed before jre6;
+>
+>
+>
+> Yann
+>
+>
+>
+> ________________________________
+>
+> From: mackmusd-hbijzgs@list.scms.waikato.ac.nz
+> [mailto:mackmusd-hbijzgs@list.scms.waikato.ac.nz] On Behalf Of Rough
+> Jade
+> Sent: Thursday, February 07, 2008 11:52 AM
+> To: iuxxdkqk@list.scms.waikato.ac.nz
+> Subject: [Wekalist] Weka 3.5.7.exe installation problems
+>
+>
+>
+> Dear List,
+>
+> I am a newbie, using weka. i have downloaded the developer version for
+> windows. i have already installed java j2se jdk1.6 in my machine. i try
+> installing weka3.5.7.exe. i am facing problem an error shows with a
+> command prompt(DOS) c:\\programfiles\\weka 3-5-7 with a popup Java
+> launcher message couldnt find mail.class and application exit. i have
+> search in wiki and gave the classpath still the same. i have uninstall
+> the existing java jdk and try with weka3-5-7jre.exe but still the same.
+>
+> kindly need some help. iam using WinXP IBM desktop.
+>
+> RJ
+>
+>
+>
+>
+> This e-mail, including any attachments, is a confidential business
+> communication, and may contain information that is confidential, proprietary
+> and/or privileged. This e-mail is intended only for the individual(s) to
+> whom it is addressed, and may not be saved, copied, printed, disclosed or
+> used by anyone else. If you are not the(an) intended recipient, please
+> immediately delete this e-mail from your computer system and notify the
+> sender. Thank you.
+>
+> -------------- next part --------------
+> An HTML attachment was scrubbed...
+> URL:
+> https://list.scms.waikato.ac.nz/pipermail/wekalist/attachments/20080207/53fe4920/attachment-0001.html
+>
+> ------------------------------
+>
+> Message: 2
+> Date: Thu, 7 Feb 2008 15:16:18 -0500
+> From: "Uday Kamath" 
+> Subject: [Wekalist] Question (bug?)
+> To: iuxxdkqk@list.scms.waikato.ac.nz
+> Message-ID:
+> <925916921402717592j91ml2140mz175r259n69w1y02@mail.gmail.com>
+> Content-Type: text/plain; charset="iso-8859-1"
+>
+> I saw that in version 3.3.4 (also in latest) JRip uses FastVector and when
+> i
+> saw running the weather nominal data (14), when the Rule has two
+> conditions
+> (humidity = high) and (outlook = sunny)
+> Pruning of rule calls FastVector.removeElementat(1) which causes the size
+> to
+> be reduced but the objects are still held, i.e. antecedents are not
+> removed
+> from object, even though size is reduced to 1. If i look at the vector
+> code
+> it is
+> public final void removeElementAt(int index) {
+>
+> System.arraycopy(m_Objects, index + 1, m_Objects, index,
+> *m_Size - index - 1*);
+> m_Size--;
+> }
+>
+> Like in java Vector shouldn't this be *index ?
+> Uday
+> *
+> -------------- next part --------------
+> An HTML attachment was scrubbed...
+> URL:
+> https://list.scms.waikato.ac.nz/pipermail/wekalist/attachments/20080207/35596c15/attachment-0001.html
+>
+> ------------------------------
+>
+> Message: 3
+> Date: Thu, 7 Feb 2008 23:24:14 +0100
+> From: "Budziak, G." 
+> Subject: [Wekalist] Event Sequence Mining
+> To: "iuxxdkqk@list.scms.waikato.ac.nz"
+> 
+> Message-ID: <84he7592-13qe-889u-c498-vz9eb3468w90@mimectl>
+> Content-Type: text/plain; charset="iso-8859-1"
+>
+> Dear List,
+> Currently I'm performing an assignment in which I use WEKA 3.5.7. As input
+> I take data from a relational database. Below is a sample from this table
+> stored in a MySQL database. Each row represents an "EVENT":
+>
+> ID | USER_X | EVENT_Y | TIME
+> ----------------------------
+> 1 USER_1 EVENT_1 t1
+> 2 USER_1 EVENT_3 t2
+> 3 USER_1 EVENT_10 t3
+> :
+> j USER_1 EVENT_1 t_i
+> j+1 USER_2 EVENT_4 t_i+1
+> :
+> N USER_A EVENT_3 t_z
+>
+> ID: unique for each row.
+> USER_X: USER with X an element from the set [0 .. A) identifying a user.
+> EVENT_Y: EVENT with Y an element from the set [0 .. B) identifying an
+> event.
+>
+> Conneting to the database works fine. Now, I would like to obtain the
+> following format:
+> A "User-based B-dimensional vector/dictionary" of all events where each
+> position in this vector space corresponds to an event and holds a binary
+> value - 0 or 1 - indicating whether the event occured or not. So duplicates
+> are neglected. For the sample table below with B = 7 (indicating that there
+> a 7 different events, numbered 0 through 6), this might look like:
+>
+> ID | USER_X | EVENT_Y | TIME
+> ----------------------------
+> 1 USER_1 EVENT_1 t1
+> 2 USER_1 EVENT_3 t2
+> 3 USER_1 EVENT_4 t3
+> 4 USER_1 EVENT_6 t4
+> 5 USER_2 EVENT_5 t5
+>
+> USER_1: (0,1,0,1,1,0,1)
+> USER_2: (0,0,0,0,0,1,0)
+>
+> I hope that someone can help me out.
+>
+> Kind regards,
+>
+> Guido Budziak
+> -------------- next part --------------
+> An HTML attachment was scrubbed...
+> URL:
+> https://list.scms.waikato.ac.nz/pipermail/wekalist/attachments/20080207/66c11535/attachment-0001.html
+>
+> ------------------------------
+>
+> Message: 4
+> Date: Fri, 8 Feb 2008 01:09:15 +0000
+> From: Cristina Torres 
+> Subject: RE: [Wekalist] Question (bug?)
+> To: Weka machine learning workbench list.
+> 
+> Message-ID: 
+> Content-Type: text/plain; charset="iso-8859-1"
+>
+>
+> Hello
+>
+> I am Cris, I am new using Weka, I am using using Weka version 3.5.7developer, and I don't know how to put a new filter, I know
+> that I have to modify Weka but I don't know how to compile the entire
+> Weka, I am using Windows System. First I am using the guide classifier
+> example of the guide of Weka.
+>
+> If someone can help me please!!!
+>
+> Thanks a lot!
+>
+>
+> Cris
+> _________________________________________________________________
+> Express yourself instantly with MSN Messenger! Download today it's FREE!
+> http://messenger.msn.click-url.com/go/onm00200471ave/direct/01/
+> -------------- next part --------------
+> An HTML attachment was scrubbed...
+> URL:
+> https://list.scms.waikato.ac.nz/pipermail/wekalist/attachments/20080208/8f24cc10/attachment-0001.html
+>
+> ------------------------------
+>
+> Message: 5
+> Date: Fri, 8 Feb 2008 08:12:26 +0530
+> From: "Nanda, Subrat (GE, Research)" 
+> Subject: RE: [Wekalist] where can i find algorithms explanation
+> To: "Weka machine learning workbench list."
+> 
+> Message-ID:
+> <3lc3x56n1hd3l476v90lx5ynph5zl4p639c3x56n@BANMLVEM07.e2k.ad.ge.com>
+> Content-Type: text/plain; charset="iso-8859-1"
+>
+> Hi,
+>
+> To get a handle on the algorithms and the basics behind each of the
+> algorithms, be they for clustering, classification or attribute
+> selection, etc, I suggest take up a good text book which will help
+> understand the fundamentals. There are lots of great books available,
+> which will present a clear and consice picture of the data mining tools,
+> artificial intelligence methodologies or the machine learning methods,
+> some of which are implemented in Weka. Here find listed some of the
+> books you could use for gaining deeper insights:
+>
+> 1. To start with, Whitten & Frank's book on Data Mining is a great one.
+> This is the book Weka refers to. There are also ones by Han; D. Hand on
+> the same topic and widely used.
+> 2. For Artificial Intelligence, Russel and Norvig; or Winston; or Knight
+> or Charniak are widely read authors.
+>
+> In addition to all the books, there are a host of materials available on
+> the internet inthe form of tutorials slides, papers, articles and even
+> open source training material that can be very useful and also handy.
+> MIT has a great open source tutorial, most good Universities have some
+> teaching material posted by professors which you can read.
+>
+> Hope this should help,
+>
+> Regards,
+> Subrat
+>
+> ________________________________
+>
+> From: mackmusd-hbijzgs@list.scms.waikato.ac.nz
+> [mailto:mackmusd-hbijzgs@list.scms.waikato.ac.nz] On Behalf Of Andhra
+> Loyola College
+> Sent: Thursday, February 07, 2008 12:13 PM
+> To: iuxxdkqk@list.scms.waikato.ac.nz
+> Subject: [Wekalist] where can i find algorithms explanation
+>
+>
+> dear weka forum,
+>
+> I had gone through all the documentations
+> present in source forge, but i could not find clear explanation of the
+> algorithms.Can some one tell me where i can find them in Internet.
+>
+> thank u.
+> sunanda
+>
+> ________________________________
+>
+> Be a better friend, newshound, and know-it-all with Yahoo! Mobile. Try
+> it now.
+> 2sR8HDtDypao8Wcj9tAcJ>
+> -------------- next part --------------
+> An HTML attachment was scrubbed...
+> URL:
+> https://list.scms.waikato.ac.nz/pipermail/wekalist/attachments/20080208/4f9b22c7/attachment.html
+>
+> ------------------------------
+>
+> _______________________________________________
+> Wekalist mailing list
+> iuxxdkqk@list.scms.waikato.ac.nz
+> https://list.scms.waikato.ac.nz/mailman/listinfo/wekalist
+>
+>
+> End of Wekalist Digest, Vol 60, Issue 10
+> ****************************************
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: https://list.scms.waikato.ac.nz/pipermail/wekalist/attachments/20080208/526a6ed6/attachment.html
+
+------------------------------
+
+_______________________________________________
+Wekalist mailing list
+iuxxdkqk@list.scms.waikato.ac.nz
+https://list.scms.waikato.ac.nz/mailman/listinfo/wekalist
+
+
+End of Wekalist Digest, Vol 60, Issue 11
+****************************************

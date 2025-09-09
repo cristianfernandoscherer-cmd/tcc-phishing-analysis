@@ -1,0 +1,20 @@
+sender: Ralf Hildebrandt <ecfa.ocnmogiylyn@charite.de>
+receiver: rljdsng-xyqoh@postfix.org
+subject: Re: Forwarding all localmail
+Body:
+* Randy Ramsdell :
+
+> I would like to know what would be better that using aliases or .forward 
+> to forward all local mail. I want to simply forward all mail without 
+> having to intervene for new users or new services.
+> Any suggestion?
+
+aliases or virtual_alias_maps
+
+-- 
+Ralf Hildebrandt (ecfa.ocnmogiylyn@charite.de) ulivs@charite.de
+Postfix - Einrichtung, Betrieb und Wartung Tel. +49 (0)30-450 570-155
+http://www.arschkrebs.de
+Lesbian Nazi Hookers Abducted by UFOs and Forced Into Weight Loss
+Programs - -all next week on Town Talk.
+
